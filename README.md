@@ -1,45 +1,49 @@
-Bitcore Node
+Bitcore Node Dash
 ============
 
-A Bitcoin full node for building applications and services with Node.js. A node is extensible and can be configured to run additional services. At the minimum a node has an interface to [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12-bitcore) for more advanced address queries. Additional services can be enabled to make a node more useful such as exposing new APIs, running a block explorer and wallet service.
+A Dash full node for building applications and services with Node.js. A node is extensible and can be configured to run additional services. At the minimum a node has an interface to [Dash Core with additional indexing](https://github.com/snogcel/dash/tree/v0.12.1.x) for more advanced address queries. Additional services can be enabled to make a node more useful such as exposing new APIs, running a block explorer and wallet service.
 
 ## Install
 
 ```bash
-npm install -g bitcore-node
-bitcore-node start
+npm install -g bitcore-node-dash
 ```
 
-Note: For your convenience, we distribute bitcoind binaries for x86_64 Linux and x86_64 Mac OS X. Upon npm install, the binaries for your platform will be downloaded. For more detailed installation instructions, or if you want to compile the project yourself, then please see the Bitcore branch of [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12-bitcore).
+Installation of bitcore-node-dash can also be performed using a Dockerfile. Please note that this Dockerfile is still under development and should be considered an 'Alpha' version, see [docker-bitcore_insight_dash](https://github.com/moocowmoo/docker-bitcore_insight_dash) for more details.
 
 ## Prerequisites
 
-- GNU/Linux x86_32/x86_64, or OSX 64bit *(for bitcoind distributed binaries)*
-- Node.js v0.10, v0.12 or v4
+- Dash Core (v0.12.1.x) with support for additional indexing *(see above)*
+- Node.js v0.10, v0.12, v4 or v5
 - ZeroMQ *(libzmq3-dev for Ubuntu/Debian or zeromq on OSX)*
-- ~200GB of disk storage
-- ~8GB of RAM
+- ~20GB of disk storage
+- ~1GB of RAM
 
 ## Configuration
 
 Bitcore includes a Command Line Interface (CLI) for managing, configuring and interfacing with your Bitcore Node.
 
 ```bash
-bitcore-node create -d <bitcoin-data-dir> mynode
+bitcore-node-dash create -d <dash-data-dir> mynode
 cd mynode
-bitcore-node install <service>
-bitcore-node install https://github.com/yourname/helloworld
+bitcore-node-dash install <service>
+bitcore-node-dash install https://github.com/yourname/helloworld
+bitcore-node-dash start
 ```
 
-This will create a directory with configuration files for your node and install the necessary dependencies. For more information about (and developing) services, please see the [Service Documentation](docs/services.md).
+This will create a directory with configuration files for your node and install the necessary dependencies.
+
+Please note that [Dash Core with additional indexing](https://github.com/snogcel/dash/tree/v0.12.1.x) must be compiled seperately. Once completed the dashd binary should be placed into the &lt;dash-data-dir&gt; folder specified during node creation.
+
+For more information about (and developing) services, please see the [Service Documentation](docs/services.md).
 
 ## Add-on Services
 
 There are several add-on services available to extend the functionality of Bitcore:
 
-- [Insight API](https://github.com/bitpay/insight-api/tree/v0.3.0)
-- [Insight UI](https://github.com/bitpay/insight/tree/v0.3.0)
-- [Bitcore Wallet Service](https://github.com/bitpay/bitcore-wallet-service)
+- [Insight API Dash](https://github.com/dashpay/insight-api-dash/tree/master)
+- [Insight UI Dash](https://github.com/dashpay/insight-ui-dash/tree/master)
+- Bitcore Wallet Service (coming soon)
 
 ## Documentation
 
@@ -58,7 +62,7 @@ Please send pull requests for bug fixes, code optimization, and ideas for improv
 
 ## License
 
-Code released under [the MIT license](https://github.com/bitpay/bitcore-node/blob/master/LICENSE).
+Code released under [the MIT license](https://github.com/bitpay/bitcore-node-dash/blob/master/LICENSE).
 
 Copyright 2013-2015 BitPay, Inc.
 

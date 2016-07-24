@@ -9,7 +9,7 @@ var log = index.log;
 log.debug = function() {};
 
 var chai = require('chai');
-var bitcore = require('bitcore-lib');
+var bitcore = require('bitcore-lib-dash');
 var rimraf = require('rimraf');
 var node;
 
@@ -32,7 +32,7 @@ describe('Node Functionality', function() {
   var regtest;
 
   before(function(done) {
-    this.timeout(20000);
+    this.timeout(200000);
 
     var datadir = __dirname + '/data';
 
@@ -53,7 +53,7 @@ describe('Node Functionality', function() {
             config: {
               spawn: {
                 datadir: datadir,
-                exec: path.resolve(__dirname, '../bin/bitcoind')
+                exec: path.resolve(__dirname, process.env.HOME, './.bitcore/data/dashd')
               }
             }
           }
@@ -105,7 +105,7 @@ describe('Node Functionality', function() {
   });
 
   after(function(done) {
-    this.timeout(20000);
+    this.timeout(200000);
     node.stop(function(err, result) {
       if(err) {
         throw err;
@@ -147,7 +147,7 @@ describe('Node Functionality', function() {
     var address;
     var unspentOutput;
     before(function(done) {
-      this.timeout(10000);
+      this.timeout(100000);
       address = testKey.toAddress(regtest).toString();
       var startHeight = node.services.bitcoind.height;
       node.services.bitcoind.on('tip', function(height) {
@@ -229,7 +229,7 @@ describe('Node Functionality', function() {
     });
     describe('History', function() {
 
-      this.timeout(20000);
+      this.timeout(200000);
 
       var testKey2;
       var address2;
@@ -663,8 +663,8 @@ describe('Node Functionality', function() {
         var memAddress = bitcore.PrivateKey().toAddress(node.network).toString();
         var tx = new Transaction();
         tx.from(unspentOutput);
-        tx.to(memAddress, unspentOutput.satoshis - 1000);
-        tx.fee(1000);
+        tx.to(memAddress, unspentOutput.satoshis - 2000);
+        tx.fee(2000);
         tx.sign(testKey);
 
         node.services.bitcoind.sendTransaction(tx.serialize(), function(err, hash) {
@@ -684,7 +684,7 @@ describe('Node Functionality', function() {
   });
 
   describe('Orphaned Transactions', function() {
-    this.timeout(8000);
+    this.timeout(80000);
     var orphanedTransaction;
 
     before(function(done) {
