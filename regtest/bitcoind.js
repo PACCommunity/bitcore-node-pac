@@ -456,6 +456,7 @@ describe('Bitcoind Functionality', function() {
         tx.outputs[0].spentIndex.should.equal(0);
         tx.outputs[0].spentHeight.should.be.a('number');
         tx.outputs[0].address.should.be.a('string');
+        tx.txlock.should.equal(false);
         done();
       });
     });

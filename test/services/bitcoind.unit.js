@@ -1249,6 +1249,56 @@ describe('Bitcoin Service', function() {
     });
   });
 
+  // TODO: transaction lock test coverage
+  describe('#_zmqTransactionLockHandler', function() {
+    it('will emit to subscribers', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var expectedBuffer = new Buffer(txhex, 'hex');
+      var emitter = new EventEmitter();
+      bitcoind.subscriptions.transactionlock.push(emitter);
+      emitter.on('bitcoind/transactionlock', function(hex) {
+        hex.should.be.a('string');
+        hex.should.equal(expectedBuffer.toString('hex'));
+        done();
+      });
+      var node = {};
+      bitcoind._zmqTransactionLockHandler(node, expectedBuffer);
+    });
+    it('will NOT emit to subscribers more than once for the same tx', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var expectedBuffer = new Buffer(txhex, 'hex');
+      var emitter = new EventEmitter();
+      bitcoind.subscriptions.transactionlock.push(emitter);
+      emitter.on('bitcoind/transactionlock', function() {
+        done();
+      });
+      var node = {};
+      bitcoind._zmqTransactionLockHandler(node, expectedBuffer);
+      bitcoind._zmqTransactionLockHandler(node, expectedBuffer);
+    });
+    it('will emit "tx" event', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var expectedBuffer = new Buffer(txhex, 'hex');
+      bitcoind.on('txlock', function(buffer) {
+        buffer.should.be.instanceof(Buffer);
+        buffer.toString('hex').should.equal(expectedBuffer.toString('hex'));
+        done();
+      });
+      var node = {};
+      bitcoind._zmqTransactionLockHandler(node, expectedBuffer);
+    });
+    it('will NOT emit "tx" event more than once for the same tx', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var expectedBuffer = new Buffer(txhex, 'hex');
+      bitcoind.on('txlock', function() {
+        done();
+      });
+      var node = {};
+      bitcoind._zmqTransactionLockHandler(node, expectedBuffer);
+      bitcoind._zmqTransactionLockHandler(node, expectedBuffer);
+    });
+  });
+
   describe('#_checkSyncedAndSubscribeZmqEvents', function() {
     var sandbox = sinon.sandbox.create();
     before(function() {
