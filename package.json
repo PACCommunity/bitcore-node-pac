@@ -1,8 +1,8 @@
 {
   "name": "bitcore-node-dash",
-  "description": "Full node with extended capabilities using Bitcore and Bitcoin Core",
+  "description": "Full node with extended capabilities using Bitcore and Dash Core",
   "author": "BitPay <dev@bitpay.com>",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "main": "./index.js",
   "repository": "git://github.com/dashpay/bitcore-node-dash.git",
   "homepage": "https://github.com/dashpay/bitcore-node-dash",
