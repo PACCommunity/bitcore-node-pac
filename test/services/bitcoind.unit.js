@@ -643,7 +643,7 @@ describe('Bitcoin Service', function() {
   });
 
   describe('#_wrapRPCError', function() {
-    it('will convert bitcoind-rpc error object into JavaScript error', function() {
+    it('will convert bitcoind-rpc-dash error object into JavaScript error', function() {
       var bitcoind = new BitcoinService(baseConfig);
       var error = bitcoind._wrapRPCError({message: 'Test error', code: -1});
       error.should.be.an.instanceof(errors.RPCError);
@@ -5009,6 +5009,172 @@ describe('Bitcoin Service', function() {
         done();
       });
     });
+  });
+
+  describe('#govObject', function() {
+    it('will call client gobject list and give result', function(done) {
+        var bitcoind = new BitcoinService(baseConfig);
+        var gobject = sinon.stub().callsArgWith(1, null, {
+            result: [{
+                "Hash": "9ce5609d41b88fca51dd3f4ad098467cf8c6f2c1b2adf93a6862a7b9bdf01a00",
+                "DataHex": "5b5b2270726f706f73616c222c7b22656e645f65706f6368223a313438343830393436302c226e616d65223a2264363534366361353232363730633664303039333662393562323766666233393631643063663234222c227061796d656e745f61646472657373223a22796a42746b73586b47483731693341346d6e374b7848793975634d6473717a756b57222c227061796d656e745f616d6f756e74223a332c2273746172745f65706f6368223a313438343636313730392c2274797065223a312c2275726c223a2268747470733a2f2f7777772e646173682e6f7267227d5d5d",
+                "DataObject": {
+                    "end_epoch": 1484809460,
+                    "name": "d6546ca522670c6d00936b95b27ffb3961d0cf24",
+                    "payment_address": "yjBtksXkGH71i3A4mn7KxHy9ucMdsqzukW",
+                    "payment_amount": 3,
+                    "start_epoch": 1484661709,
+                    "type": 1,
+                    "url": "https://www.dash.org"
+                },
+                "AbsoluteYesCount": 0,
+                "YesCount": 0,
+                "NoCount": 0,
+                "AbstainCount": 0
+            }, {
+                "Hash": "21af004754d57660a5b83818b26263699b9e25c53a46395b7386e786d1644c00",
+                "DataHex": "5b5b2270726f706f73616c222c7b22656e645f65706f6368223a313438343636353636372c226e616d65223a2236306164663935366535313138663331633131353564613866373662396134376464363863306361222c227061796d656e745f61646472657373223a227967684b6f5272526a31696f644c6f684e4e704b52504a5a7673537562367a626756222c227061796d656e745f616d6f756e74223a39382c2273746172745f65706f6368223a313438343635343931352c2274797065223a312c2275726c223a2268747470733a2f2f7777772e646173682e6f7267227d5d5d",
+                "DataObject": {
+                    "end_epoch": 1484665667,
+                    "name": "60adf956e5118f31c1155da8f76b9a47dd68c0ca",
+                    "payment_address": "yghKoRrRj1iodLohNNpKRPJZvsSub6zbgV",
+                    "payment_amount": 98,
+                    "start_epoch": 1484654915,
+                    "type": 1,
+                    "url": "https://www.dash.org"
+                },
+                "AbsoluteYesCount": 0,
+                "YesCount": 0,
+                "NoCount": 0,
+                "AbstainCount": 0
+            }, {
+                "Hash": "4ef24027c631c43035aa4cf5c672e1298311decd9cffbd16731f454c9c0d6d00",
+                "DataHex": "5b5b2270726f706f73616c222c7b22656e645f65706f6368223a313438333835353139332c226e616d65223a2237656139616366663561653833643863396532313764333061326234643130656638663137316638222c227061796d656e745f61646472657373223a22795a3744596b44484348664831647737724b6459614b6356796b5a6d756e62714e4c222c227061796d656e745f616d6f756e74223a38342c2273746172745f65706f6368223a313438333736353238322c2274797065223a312c2275726c223a2268747470733a2f2f7777772e646173682e6f7267227d5d5d",
+                "DataObject": {
+                    "end_epoch": 1483855193,
+                    "name": "7ea9acff5ae83d8c9e217d30a2b4d10ef8f171f8",
+                    "payment_address": "yZ7DYkDHCHfH1dw7rKdYaKcVykZmunbqNL",
+                    "payment_amount": 84,
+                    "start_epoch": 1483765282,
+                    "type": 1,
+                    "url": "https://www.dash.org"
+                },
+                "AbsoluteYesCount": 0,
+                "YesCount": 0,
+                "NoCount": 0,
+                "AbstainCount": 0
+            }]
+        });
+        bitcoind.nodes.push({
+            client: {
+                gobject: gobject
+            }
+        });
+        bitcoind.govObjectList({type: 1}, function(err, result) {
+            if (err) {
+                return done(err);
+            }
+            should.exist(result);
+            should.equal(result.length, 3);
+            done();
+        });
+    });
+
+    it('will call client gobject list and return error', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var gobject = sinon.stub().callsArgWith(1, {message: 'error', code: -1});
+      bitcoind.nodes.push({
+        client: {
+          gobject: gobject
+        }
+      });
+      bitcoind.govObjectList({type: 1}, function(err, result) {
+        should.exist(err);
+        err.should.be.an.instanceof(errors.RPCError);
+        done();
+      });
+    });
+
+    it('will call client gobject get and give result', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var hash = "4ef24027c631c43035aa4cf5c672e1298311decd9cffbd16731f454c9c0d6d00";
+      var gobject = sinon.stub().callsArgWith(2, null, {
+        result: {
+          "DataHex": "5b5b2270726f706f73616c222c7b22656e645f65706f6368223a313438333835353139332c226e616d65223a2237656139616366663561653833643863396532313764333061326234643130656638663137316638222c227061796d656e745f61646472657373223a22795a3744596b44484348664831647737724b6459614b6356796b5a6d756e62714e4c222c227061796d656e745f616d6f756e74223a38342c2273746172745f65706f6368223a313438333736353238322c2274797065223a312c2275726c223a2268747470733a2f2f7777772e646173682e6f7267227d5d5d",
+          "DataString": "[[\"proposal\",{\"end_epoch\":1483855193,\"name\":\"7ea9acff5ae83d8c9e217d30a2b4d10ef8f171f8\",\"payment_address\":\"yZ7DYkDHCHfH1dw7rKdYaKcVykZmunbqNL\",\"payment_amount\":84,\"start_epoch\":1483765282,\"type\":1,\"url\":\"https://www.dash.org\"}]]",
+          "Hash": "4ef24027c631c43035aa4cf5c672e1298311decd9cffbd16731f454c9c0d6d00",
+          "CollateralHash": "6be3a3ae49498ec8f4e5cba56ac44164aeb78e57f2dbc716f4ff863034830d08",
+          "CreationTime": 1483724928,
+          "FundingResult": {
+            "AbsoluteYesCount": 0,
+            "YesCount": 0,
+            "NoCount": 0,
+            "AbstainCount": 0
+          },
+          "ValidResult": {
+            "AbsoluteYesCount": -11,
+            "YesCount": 36,
+            "NoCount": 47,
+            "AbstainCount": 0
+          },
+          "DeleteResult": {
+            "AbsoluteYesCount": 0,
+            "YesCount": 0,
+            "NoCount": 0,
+            "AbstainCount": 0
+          },
+          "EndorsedResult": {
+            "AbsoluteYesCount": 0,
+            "YesCount": 0,
+            "NoCount": 0,
+            "AbstainCount": 0
+          },
+          "fLocalValidity": true,
+          "IsValidReason": "",
+          "fCachedValid": false,
+          "fCachedFunding": false,
+          "fCachedDelete": false,
+          "fCachedEndorsed": false
+        }
+      });
+      bitcoind.nodes.push({
+        client: {
+          gobject: gobject
+        }
+      });
+      bitcoind.govObjectHash('4ef24027c631c43035aa4cf5c672e1298311decd9cffbd16731f454c9c0d6d00', function(err, result) {
+        if (err) {
+          return done(err);
+        }
+        should.exist(result[0]);
+
+        var DataObject = result[0].DataObject;
+        should.equal(DataObject.end_epoch, 1483855193);
+        should.equal(DataObject.name, '7ea9acff5ae83d8c9e217d30a2b4d10ef8f171f8');
+        should.equal(DataObject.payment_address, 'yZ7DYkDHCHfH1dw7rKdYaKcVykZmunbqNL');
+        should.equal(DataObject.payment_amount, 84);
+        should.equal(DataObject.start_epoch, 1483765282);
+        should.equal(DataObject.type, 1);
+        should.equal(DataObject.url, 'https://www.dash.org');
+        done();
+      });
+    });
+
+    it('will call client gobject get and return error', function(done) {
+      var bitcoind = new BitcoinService(baseConfig);
+      var gobject = sinon.stub().callsArgWith(2, {message: 'error', code: -1});
+      bitcoind.nodes.push({
+        client: {
+          gobject: gobject
+        }
+      });
+      bitcoind.govObjectHash('4ef24027c631c43035aa4cf5c672e1298311decd9cffbd16731f454c9c0d6d00', function(err, result) {
+        should.exist(err);
+        err.should.be.an.instanceof(errors.RPCError);
+        done();
+      });
+    });
+
   });
 
   describe('#generateBlock', function() {

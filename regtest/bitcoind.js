@@ -17,7 +17,7 @@ var bitcoind;
 var should = chai.should();
 var assert = chai.assert;
 var sinon = require('sinon');
-var BitcoinRPC = require('bitcoind-rpc');
+var BitcoinRPC = require('bitcoind-rpc-dash');
 var transactionData = [];
 var blockHashes = [];
 var utxos;
@@ -29,7 +29,7 @@ var destKey = bitcore.PrivateKey();
 describe('Bitcoind Functionality', function() {
 
   before(function(done) {
-    this.timeout(60000);
+    this.timeout(200000);
 
     // Add the regtest network
     bitcore.Networks.enableRegtest();

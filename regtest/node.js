@@ -15,7 +15,7 @@ var node;
 
 var should = chai.should();
 
-var BitcoinRPC = require('bitcoind-rpc');
+var BitcoinRPC = require('bitcoind-rpc-dash');
 var index = require('..');
 var Transaction = bitcore.Transaction;
 var BitcoreNode = index.Node;
@@ -147,7 +147,7 @@ describe('Node Functionality', function() {
     var address;
     var unspentOutput;
     before(function(done) {
-      this.timeout(100000);
+      this.timeout(300000);
       address = testKey.toAddress(regtest).toString();
       var startHeight = node.services.bitcoind.height;
       node.services.bitcoind.on('tip', function(height) {
