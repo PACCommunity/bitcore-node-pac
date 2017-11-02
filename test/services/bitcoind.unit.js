@@ -5345,9 +5345,10 @@ describe('Bitcoin Service', function() {
 			});
 		});
 	});
-  describe('#masternodeList', function(){
+  describe('#getMNList', function(){
     it('will call client masternode list and give result', function(done){
 	    var bitcoind = new BitcoinService(baseConfig);
+	    bitcoind.isSynced = function(callback) { return callback(null, true) };
 	    bitcoind.nodes.push({
 		    client: {
 			    masternodelist: function(type, cb){
@@ -5409,6 +5410,115 @@ describe('Bitcoin Service', function() {
 		    MNList[0].lastseen.should.equal(1502078120);
 		    done();
 	    });
+    });
+
+    it('will return error if one of nodes not synced yet', function(done){
+      var bitcoind = new BitcoinService(baseConfig);
+      bitcoind.isSynced = function(callback) { return callback(null, false) };
+      bitcoind.nodes.push({
+        client: {
+          masternodelist: function(type, cb){
+            switch (type){
+              case "rank":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 1,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 2}
+                });
+              case "protocol":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 70206,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 60000}
+                });
+              case "payee":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': "Xfpp5BxPfFistPPjTe6FucYmtDVmT1GDG3",
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': "Xn16rfdygfViHe2u36jkDUs9NLmUrUsEKa"}
+                });
+              case "lastseen":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 1502078120,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 1502078203}
+                });
+              case "activeseconds":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 7016289,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 2871829}
+                });
+                break;
+              case "addr":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': "108.61.209.47:9999",
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': "34.226.228.73:9999"}
+                });
+              case "status":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': "ENABLED",
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': "ENABLED"}
+                });
+            }
+          }
+        }
+      });
+
+      bitcoind.getMNList(function(err, MNList) {
+        err.should.be.instanceof(Error);
+        console.log(err);
+        done();
+      });
+    });
+
+    it('will return error if checking synced state of nodes failed', function(done){
+      var bitcoind = new BitcoinService(baseConfig);
+      bitcoind.isSynced = function(callback) { return callback(new Error('Failed')) };
+      bitcoind.nodes.push({
+        client: {
+          masternodelist: function(type, cb){
+            switch (type){
+              case "rank":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 1,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 2}
+                });
+              case "protocol":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 70206,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 60000}
+                });
+              case "payee":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': "Xfpp5BxPfFistPPjTe6FucYmtDVmT1GDG3",
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': "Xn16rfdygfViHe2u36jkDUs9NLmUrUsEKa"}
+                });
+              case "lastseen":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 1502078120,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 1502078203}
+                });
+              case "activeseconds":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': 7016289,
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': 2871829}
+                });
+                break;
+              case "addr":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': "108.61.209.47:9999",
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': "34.226.228.73:9999"}
+                });
+              case "status":
+                return cb(null, { result:
+                  { '06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0': "ENABLED",
+                    'b76bafae974b80204e79858eb62aedec41159519c90d23f811cca1eca40f2e4c-1': "ENABLED"}
+                });
+            }
+          }
+        }
+      });
+
+      bitcoind.getMNList(function(err, MNList) {
+        err.should.be.instanceof(Error);
+        done();
+      });
     });
   });
 
