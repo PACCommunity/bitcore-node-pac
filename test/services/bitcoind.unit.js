@@ -4551,7 +4551,7 @@ describe('Bitcoin Service', function() {
     var tx = bitcore.Transaction(txhex);
     it('will give rpc error', function() {
       var bitcoind = new BitcoinService(baseConfig);
-      var sendRawTransaction = sinon.stub().callsArgWith(2, {message: 'error', code: -1});
+      var sendRawTransaction = sinon.stub().callsArgWith(3, {message: 'error', code: -1});
       bitcoind.nodes.push({
         client: {
           sendRawTransaction: sendRawTransaction
@@ -4564,7 +4564,7 @@ describe('Bitcoin Service', function() {
     });
     it('will send to client and get hash', function() {
       var bitcoind = new BitcoinService(baseConfig);
-      var sendRawTransaction = sinon.stub().callsArgWith(2, null, {
+      var sendRawTransaction = sinon.stub().callsArgWith(3, null, {
         result: tx.hash
       });
       bitcoind.nodes.push({
@@ -4581,7 +4581,7 @@ describe('Bitcoin Service', function() {
     });
     it('will send to client with absurd fees and get hash', function() {
       var bitcoind = new BitcoinService(baseConfig);
-      var sendRawTransaction = sinon.stub().callsArgWith(2, null, {
+      var sendRawTransaction = sinon.stub().callsArgWith(3, null, {
         result: tx.hash
       });
       bitcoind.nodes.push({
@@ -4598,7 +4598,7 @@ describe('Bitcoin Service', function() {
     });
     it('missing callback will throw error', function() {
       var bitcoind = new BitcoinService(baseConfig);
-      var sendRawTransaction = sinon.stub().callsArgWith(2, null, {
+      var sendRawTransaction = sinon.stub().callsArgWith(3, null, {
         result: tx.hash
       });
       bitcoind.nodes.push({
