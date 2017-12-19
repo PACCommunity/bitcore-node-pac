@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "benchmark": "1.0.0",
-    "bitcore-p2p-dash": "^1.1.5",
+    "bitcore-p2p-dash": "^1.1.6",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",
