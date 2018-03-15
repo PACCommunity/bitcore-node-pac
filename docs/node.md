@@ -14,7 +14,7 @@ A node represents a collection of services that are loaded together. For more in
 
 ```js
 
-var index = require('bitcore-node-dash');
+var index = require('bitcore-node-pac');
 var Bitcoin = index.services.Bitcoin;
 var Node = index.Node;
 

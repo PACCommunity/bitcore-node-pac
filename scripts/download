@@ -5,19 +5,22 @@ set -e
 root_dir="${HOME}/.bitcore"
 platform=`uname -a | awk '{print tolower($1)}'`
 arch=`uname -m`
-version="0.12.2"
-url="https://bamboo.dash.org/browse/DASHL-REL-13/artifact/JOB1/gitian-linux-dash-dist"
+version="0.12.2.3"
+url="https://github.com/PACCommunity/PAC/releases/download/v${version}"
+
+
+
 
 if [ "${platform}" == "linux" ]; then
     if [ "${arch}" == "x86_64" ]; then
-        tarball_name="dashcore-${version}-linux64.tar.gz"
+        tarball_name="PAC-v${version}-linux-x86_64.tar.gz"
     elif [ "${arch}" == "x86_32" ]; then
-        tarball_name="dashcore-${version}-linux32.tar.gz"
+        tarball_name="PAC-v${version}-linux-x86.tar.gz"
     fi
 elif [ "${platform}" == "darwin" ]; then
-    tarball_name="dashcore-${version}-osx64.tar.gz"
+    tarball_name="PAC-v${version}-linux-x86_64.tar.gz"
 else
-    echo "Dash binary distribution not available for platform and architecture"
+    echo "PAC binary distribution not available for platform and architecture"
     exit -1
 fi
 
@@ -53,12 +56,12 @@ download_bitcoind() {
             echo "Unpacking dash distribution"
             tar -xvzf $tarball_name
             if test $? -eq 0; then
-                ln -sf "dashcore-${version}/bin/dashd"
+                #ln -sf "PAC-v${version}/bin/paccoind"
                 return;
             fi
         fi
     fi
-    echo "Dash binary distribution could not be downloaded"
+    echo "PAC binary distribution could not be downloaded"
     exit -1
 }
 

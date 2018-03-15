@@ -1,13 +1,13 @@
 {
-  "name": "bitcore-node-dash",
-  "description": "Full node with extended capabilities using Bitcore and Dash Core",
+  "name": "bitcore-node-pac",
+  "description": "Full node with extended capabilities using Bitcore and PAC Core",
   "author": "BitPay <dev@bitpay.com>",
   "version": "3.0.6",
   "main": "./index.js",
-  "repository": "git://github.com/dashevo/bitcore-node-dash.git",
-  "homepage": "https://github.com/dashevo/bitcore-node-dash",
+  "repository": "git://github.com/PACCommunity/bitcore-node-pac.git",
+  "homepage": "https://github.com/PACCommunity/bitcore-node-pac",
   "bugs": {
-    "url": "https://github.com/dashevo/bitcore-node-dash/issues"
+    "url": "https://github.com/PACCommunity/bitcore-node-pac/issues"
   },
   "contributors": [
     {
@@ -27,7 +27,7 @@
     }
   ],
   "bin": {
-    "bitcore-node-dash": "./bin/bitcore-node-dash"
+    "bitcore-node-pac": "./bin/bitcore-node-pac"
   },
   "scripts": {
     "preinstall": "./scripts/download",
@@ -41,13 +41,14 @@
     "bitcoind_test": "./node_modules/.bin/mocha test/services/bitcoind.unit.js"
   },
   "tags": [
-    "dash",
-    "dashd"
+    "pac",
+    "paccoin",
+    "paccoind"
   ],
   "dependencies": {
     "async": "^1.3.0",
-    "bitcoind-rpc-dash": "^1.0.1",
-    "bitcore-lib-dash": "^0.15.2",
+    "paccoind-rpc": "^0.7.1",
+    "bitcore-lib-pac": "^0.16.0",
     "body-parser": "^1.13.3",
     "colors": "^1.1.2",
     "commander": "^2.8.1",
@@ -69,7 +70,7 @@
   },
   "devDependencies": {
     "benchmark": "1.0.0",
-    "bitcore-p2p-dash": "^1.1.6",
+    "bitcore-p2p-pac": "^1.2.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",
